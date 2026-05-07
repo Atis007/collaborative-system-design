@@ -45,7 +45,7 @@ export function AuthSidebar() {
         <ul className="space-y-6">
           {features.map(({ icon: Icon, title, description }) => (
             <li key={title} className="flex gap-4">
-              <div className="flex-shrink-0 h-9 w-9 rounded-xl bg-bg-elevated border border-border-default flex items-center justify-center">
+              <div className="shrink-0 h-9 w-9 rounded-xl bg-bg-elevated border border-border-default flex items-center justify-center">
                 <Icon className="h-4 w-4 text-accent-primary" />
               </div>
               <div>
