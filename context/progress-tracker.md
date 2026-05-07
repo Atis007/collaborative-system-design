@@ -4,16 +4,17 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Phase 2: Editor Chrome
+- Phase 3: Auth
 
 ## Current Goal
 
-- Build the base editor chrome: EditorNavbar (fixed top bar with sidebar toggle) and ProjectSidebar (floating overlay with Tabs and New Project button).
+- Wire Clerk into the app: ClerkProvider with dark theme, sign-in/sign-up pages (two-panel layout), proxy.ts route protection, / redirect logic, UserButton in navbar.
 
 ## Completed
 
 - 01-design-system: shadcn/ui initialized (base-nova style, Tailwind v4 CSS-variable approach), all 7 components added (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea), lucide-react installed, lib/utils.ts cn() helper created, globals.css updated with project dark theme tokens.
-- 02-editor: EditorNavbar and ProjectSidebar shell components created; dialog pattern ready via existing shadcn Dialog.
+- 02-editor: EditorNavbar and ProjectSidebar shell components created; EditorShell client wrapper and app/editor layout added; dialog pattern ready via existing shadcn Dialog.
+- 03-auth: ClerkProvider with dark theme and CSS variable overrides, proxy.ts middleware with public route protection, sign-in/sign-up two-panel pages, / redirect logic, UserButton in editor navbar.
 
 ## In Progress
 
