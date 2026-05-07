@@ -2,8 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc *)",
-      "Bash(npx @biomejs/biome check components/editor/)",
-      "Bash(biome check *)"
+      "Bash(npx @biomejs/biome check *)"
     ]
   }
 }

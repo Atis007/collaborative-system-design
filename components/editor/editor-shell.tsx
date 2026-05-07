@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { EditorNavbar } from "@/components/editor/editor-navbar";
-import { ProjectSidebar } from "@/components/editor/project-sidebar";
+import { useState } from "react"
+import { EditorNavbar } from "@/components/editor/editor-navbar"
+import { ProjectSidebar } from "@/components/editor/project-sidebar"
 
 interface EditorShellProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function EditorShell({ children }: EditorShellProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
     <div className="h-screen flex flex-col bg-bg-base overflow-hidden">
@@ -23,5 +23,5 @@ export function EditorShell({ children }: EditorShellProps) {
       />
       <main className="flex-1 mt-12 overflow-hidden">{children}</main>
     </div>
-  );
+  )
 }

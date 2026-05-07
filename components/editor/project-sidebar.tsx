@@ -1,24 +1,27 @@
-"use client";
+"use client"
 
-import { Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { cn } from "@/lib/utils"
 
 interface ProjectSidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean
+  onClose: () => void
 }
 
 export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
   return (
     <aside
-      className={[
+      aria-hidden={!isOpen}
+      inert={!isOpen ? true : undefined}
+      className={cn(
         "fixed top-12 left-0 z-40 h-[calc(100vh-3rem)] w-72",
         "flex flex-col",
         "bg-bg-surface border-r border-border-default",
         "transition-transform duration-200 ease-in-out",
         isOpen ? "translate-x-0" : "-translate-x-full",
-      ].join(" ")}
+      )}
     >
       <div className="flex items-center justify-between px-4 py-3 border-b border-border-default">
         <span className="text-sm font-medium text-text-primary">Projects</span>
@@ -73,5 +76,5 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
         </Button>
       </div>
     </aside>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 interface EditorNavbarProps {
-  isSidebarOpen: boolean;
-  onToggleSidebar: () => void;
+  isSidebarOpen: boolean
+  onToggleSidebar: () => void
 }
 
 export function EditorNavbar({
@@ -34,5 +34,5 @@ export function EditorNavbar({
 
       <div className="flex items-center" />
     </header>
-  );
+  )
 }
