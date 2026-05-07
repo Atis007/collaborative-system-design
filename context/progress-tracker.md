@@ -4,15 +4,16 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Phase 1: Design System
+- Phase 2: Editor Chrome
 
 ## Current Goal
 
-- Install and configure shadcn/ui with Tailwind v4, add UI primitives (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea), create lib/utils.ts with cn(), and set up the dark theme in globals.css.
+- Build the base editor chrome: EditorNavbar (fixed top bar with sidebar toggle) and ProjectSidebar (floating overlay with Tabs and New Project button).
 
 ## Completed
 
 - 01-design-system: shadcn/ui initialized (base-nova style, Tailwind v4 CSS-variable approach), all 7 components added (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea), lucide-react installed, lib/utils.ts cn() helper created, globals.css updated with project dark theme tokens.
+- 02-editor: EditorNavbar and ProjectSidebar shell components created; dialog pattern ready via existing shadcn Dialog.
 
 ## In Progress
 
