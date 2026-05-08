@@ -77,4 +77,4 @@ Use mock project data only. Do not add API calls or persistence.
 - sidebar actions are wired
 - slug preview works
 - no TypeScript errors
-- no lint errors
+- no lint (biome) errors
