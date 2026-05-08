@@ -141,11 +141,17 @@ export function RenameProjectDialog({
             }}
             className="bg-bg-surface border-border-default text-text-primary placeholder:text-text-faint"
           />
-          {name.trim() && !toSlug(name) && (
-            <p className="text-xs text-state-error font-mono">
-              Name must contain at least one letter or number.
-            </p>
-          )}
+          <p className="text-xs font-mono min-h-4">
+            {name.trim() && !toSlug(name) ? (
+              <span className="text-state-error">
+                Name must contain at least one letter or number.
+              </span>
+            ) : (
+              <span className="text-text-muted">
+                {name.trim() ? toSlug(name) : ""}
+              </span>
+            )}
+          </p>
         </div>
 
         <DialogFooter>

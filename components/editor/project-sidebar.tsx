@@ -1,6 +1,7 @@
 "use client"
 
 import { Pencil, Plus, Trash2, X } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
 import { useEditorActions } from "@/components/editor/editor-actions-context"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -14,27 +15,45 @@ interface ProjectSidebarProps {
 
 function ProjectItem({
   project,
+  isActive,
   onRename,
   onDelete,
 }: {
   project: Project
+  isActive: boolean
   onRename?: () => void
   onDelete?: () => void
 }) {
+  const router = useRouter()
+
   return (
-    <div className="group flex items-center gap-1.5 px-2 py-1.5 rounded-xl hover:bg-bg-elevated cursor-pointer">
-      <span className="flex-1 text-sm text-text-primary truncate">
-        {project.name}
-      </span>
+    <div
+      className={cn(
+        "group relative flex items-center rounded-xl",
+        isActive ? "bg-accent-primary-dim" : "hover:bg-bg-elevated",
+      )}
+    >
+      <button
+        type="button"
+        onClick={() => router.push(`/editor/${project.id}`)}
+        className="flex-1 flex items-center gap-2 min-w-0 px-2 py-1.5 text-left"
+      >
+        <span
+          className={cn(
+            "h-1.5 w-1.5 rounded-full shrink-0 transition-opacity",
+            isActive ? "bg-accent-primary opacity-100" : "opacity-0",
+          )}
+        />
+        <span className="flex-1 text-sm text-text-primary truncate">
+          {project.name}
+        </span>
+      </button>
       {project.owned && (
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+        <div className="flex items-center gap-0.5 pr-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
           <Button
             variant="ghost"
             size="icon"
-            onClick={(e) => {
-              e.stopPropagation()
-              onRename?.()
-            }}
+            onClick={onRename}
             className="h-6 w-6 text-text-muted hover:text-text-primary hover:bg-bg-subtle"
             aria-label="Rename project"
           >
@@ -43,10 +62,7 @@ function ProjectItem({
           <Button
             variant="ghost"
             size="icon"
-            onClick={(e) => {
-              e.stopPropagation()
-              onDelete?.()
-            }}
+            onClick={onDelete}
             className="h-6 w-6 text-text-muted hover:text-state-error hover:bg-bg-subtle"
             aria-label="Delete project"
           >
@@ -60,6 +76,11 @@ function ProjectItem({
 
 export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
   const { projects, openCreate, openRename, openDelete } = useEditorActions()
+  const pathname = usePathname()
+
+  const activeProjectId = pathname.startsWith("/editor/")
+    ? pathname.split("/")[2]
+    : null
 
   const ownedProjects = projects.filter((p) => p.owned)
   const sharedProjects = projects.filter((p) => !p.owned)
@@ -125,6 +146,7 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
                     <ProjectItem
                       key={project.id}
                       project={project}
+                      isActive={project.id === activeProjectId}
                       onRename={() => openRename(project)}
                       onDelete={() => openDelete(project)}
                     />
@@ -141,7 +163,11 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
               ) : (
                 <div className="space-y-0.5">
                   {sharedProjects.map((project) => (
-                    <ProjectItem key={project.id} project={project} />
+                    <ProjectItem
+                      key={project.id}
+                      project={project}
+                      isActive={project.id === activeProjectId}
+                    />
                   ))}
                 </div>
               )}

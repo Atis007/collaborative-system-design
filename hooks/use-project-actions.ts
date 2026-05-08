@@ -20,8 +20,10 @@ export function useProjectActions(
   const [activeProject, setActiveProject] = useState<Project | null>(null)
   const [name, setName] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [owned, setOwned] = useState<Project[]>(initialOwned)
+  const [shared] = useState<Project[]>(initialShared)
 
-  const projects: Project[] = [...initialOwned, ...initialShared]
+  const projects: Project[] = [...owned, ...shared]
 
   const openCreate = useCallback(() => {
     setName("")
@@ -65,15 +67,25 @@ export function useProjectActions(
         })
         if (!res.ok) throw new Error("Failed to create project")
         const project = await res.json()
+        setOwned((prev) => [
+          { id: project.id, name: project.name, owned: true },
+          ...prev,
+        ])
         close()
         router.push(`/editor/${project.id}`)
       } else if (dialogType === "rename" && activeProject && name.trim()) {
+        const trimmed = name.trim()
         const res = await fetch(`/api/projects/${activeProject.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: name.trim() }),
+          body: JSON.stringify({ name: trimmed }),
         })
         if (!res.ok) throw new Error("Failed to rename project")
+        setOwned((prev) =>
+          prev.map((p) =>
+            p.id === activeProject.id ? { ...p, name: trimmed } : p,
+          ),
+        )
         close()
         router.refresh()
       } else if (dialogType === "delete" && activeProject) {
@@ -81,6 +93,7 @@ export function useProjectActions(
           method: "DELETE",
         })
         if (!res.ok) throw new Error("Failed to delete project")
+        setOwned((prev) => prev.filter((p) => p.id !== activeProject.id))
         close()
         if (pathname === `/editor/${activeProject.id}`) {
           router.push("/editor")
