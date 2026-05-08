@@ -9,23 +9,30 @@ import {
   RenameProjectDialog,
 } from "@/components/editor/project-dialogs"
 import { ProjectSidebar } from "@/components/editor/project-sidebar"
-import { useProjectDialogs } from "@/hooks/use-project-dialogs"
+import { useProjectActions } from "@/hooks/use-project-actions"
+import type { Project } from "@/lib/projects"
 
 interface EditorShellProps {
   children: React.ReactNode
+  initialOwned: Project[]
+  initialShared: Project[]
 }
 
-export function EditorShell({ children }: EditorShellProps) {
+export function EditorShell({
+  children,
+  initialOwned,
+  initialShared,
+}: EditorShellProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const dialogs = useProjectDialogs()
+  const actions = useProjectActions(initialOwned, initialShared)
 
   return (
     <EditorActionsContext.Provider
       value={{
-        projects: dialogs.projects,
-        openCreate: dialogs.openCreate,
-        openRename: dialogs.openRename,
-        openDelete: dialogs.openDelete,
+        projects: actions.projects,
+        openCreate: actions.openCreate,
+        openRename: actions.openRename,
+        openDelete: actions.openDelete,
       }}
     >
       <div className="h-screen flex flex-col bg-bg-base overflow-hidden">
@@ -40,28 +47,28 @@ export function EditorShell({ children }: EditorShellProps) {
         <main className="flex-1 mt-12 overflow-hidden">{children}</main>
 
         <CreateProjectDialog
-          open={dialogs.dialogType === "create"}
-          name={dialogs.name}
-          isLoading={dialogs.isLoading}
-          onNameChange={dialogs.setName}
-          onSubmit={dialogs.handleSubmit}
-          onClose={dialogs.close}
+          open={actions.dialogType === "create"}
+          name={actions.name}
+          isLoading={actions.isLoading}
+          onNameChange={actions.setName}
+          onSubmit={actions.handleSubmit}
+          onClose={actions.close}
         />
         <RenameProjectDialog
-          open={dialogs.dialogType === "rename"}
-          project={dialogs.activeProject}
-          name={dialogs.name}
-          isLoading={dialogs.isLoading}
-          onNameChange={dialogs.setName}
-          onSubmit={dialogs.handleSubmit}
-          onClose={dialogs.close}
+          open={actions.dialogType === "rename"}
+          project={actions.activeProject}
+          name={actions.name}
+          isLoading={actions.isLoading}
+          onNameChange={actions.setName}
+          onSubmit={actions.handleSubmit}
+          onClose={actions.close}
         />
         <DeleteProjectDialog
-          open={dialogs.dialogType === "delete"}
-          project={dialogs.activeProject}
-          isLoading={dialogs.isLoading}
-          onConfirm={dialogs.handleSubmit}
-          onClose={dialogs.close}
+          open={actions.dialogType === "delete"}
+          project={actions.activeProject}
+          isLoading={actions.isLoading}
+          onConfirm={actions.handleSubmit}
+          onClose={actions.close}
         />
       </div>
     </EditorActionsContext.Provider>
