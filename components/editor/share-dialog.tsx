@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Check, Copy, Link2, Trash2 } from "lucide-react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -65,14 +65,26 @@ export function ShareDialog({ project, open, onClose }: ShareDialogProps) {
 
   useEffect(() => {
     if (!open) return
+    const controller = new AbortController()
     setIsFetching(true)
-    fetch(`/api/projects/${project.id}/collaborators`)
+    setCollaborators([])
+    fetch(`/api/projects/${project.id}/collaborators`, {
+      signal: controller.signal,
+    })
       .then((r) => r.json())
       .then((data: Collaborator[]) => {
-        setCollaborators(data)
-        setIsFetching(false)
+        if (!controller.signal.aborted) {
+          setCollaborators(data)
+          setIsFetching(false)
+        }
       })
-      .catch(() => setIsFetching(false))
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setCollaborators([])
+          setIsFetching(false)
+        }
+      })
+    return () => controller.abort()
   }, [open, project.id])
 
   function handleClose() {
@@ -86,35 +98,44 @@ export function ShareDialog({ project, open, onClose }: ShareDialogProps) {
     if (!email) return
     setInviteError(null)
     setIsInviting(true)
-
-    const res = await fetch(`/api/projects/${project.id}/collaborators`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    })
-
-    if (res.ok) {
-      const collab: Collaborator = await res.json()
-      setCollaborators((prev) => [...prev, collab])
-      setInviteEmail("")
-    } else {
-      const body = await res.json().catch(() => ({}))
-      setInviteError(body.error ?? "Failed to invite collaborator")
+    try {
+      const res = await fetch(`/api/projects/${project.id}/collaborators`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+      if (res.ok) {
+        const collab: Collaborator = await res.json()
+        setCollaborators((prev) => [...prev, collab])
+        setInviteEmail("")
+      } else {
+        const body = await res.json().catch(() => ({}))
+        setInviteError(
+          (body as { error?: string }).error ?? "Failed to invite collaborator",
+        )
+      }
+    } catch {
+      setInviteError("Failed to invite collaborator")
+    } finally {
+      setIsInviting(false)
     }
-
-    setIsInviting(false)
   }
 
   async function handleRemove(collaboratorId: string) {
     setRemovingId(collaboratorId)
-    const res = await fetch(
-      `/api/projects/${project.id}/collaborators/${collaboratorId}`,
-      { method: "DELETE" },
-    )
-    if (res.ok) {
-      setCollaborators((prev) => prev.filter((c) => c.id !== collaboratorId))
+    try {
+      const res = await fetch(
+        `/api/projects/${project.id}/collaborators/${collaboratorId}`,
+        { method: "DELETE" },
+      )
+      if (res.ok) {
+        setCollaborators((prev) => prev.filter((c) => c.id !== collaboratorId))
+      }
+    } catch {
+      // network error — leave collaborator list unchanged
+    } finally {
+      setRemovingId(null)
     }
-    setRemovingId(null)
   }
 
   function handleCopyLink() {

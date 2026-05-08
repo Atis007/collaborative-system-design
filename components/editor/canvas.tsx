@@ -23,10 +23,8 @@ import { NODE_COLORS } from "@/types/canvas"
 
 const nodeTypes = { canvasNode: CanvasNodeRenderer }
 
-let nodeCounter = 0
-
 function makeNodeId(shape: NodeShape): string {
-  return `${shape}-${Date.now()}-${++nodeCounter}`
+  return `${shape}-${crypto.randomUUID()}`
 }
 
 function CanvasCore() {
