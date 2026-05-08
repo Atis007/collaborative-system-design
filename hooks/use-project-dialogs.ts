@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { MOCK_PROJECTS, type MockProject } from "@/lib/mock-projects"
 import { toSlug } from "@/lib/utils"
 
@@ -12,6 +12,7 @@ export function useProjectDialogs() {
   const [activeProject, setActiveProject] = useState<MockProject | null>(null)
   const [name, setName] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const openCreate = useCallback(() => {
     setName("")
@@ -31,6 +32,10 @@ export function useProjectDialogs() {
   }, [])
 
   const close = useCallback(() => {
+    if (timeoutRef.current !== null) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
     setDialogType(null)
     setActiveProject(null)
     setName("")
@@ -39,14 +44,19 @@ export function useProjectDialogs() {
 
   const handleSubmit = useCallback(() => {
     setIsLoading(true)
-    setTimeout(() => {
-      if (dialogType === "create" && name.trim()) {
+    timeoutRef.current = setTimeout(() => {
+      if (dialogType === "create" && name.trim() && toSlug(name)) {
         const slug = toSlug(name)
         setProjects((prev) => [
           ...prev,
           { id: Date.now().toString(), name: name.trim(), slug, owned: true },
         ])
-      } else if (dialogType === "rename" && activeProject && name.trim()) {
+      } else if (
+        dialogType === "rename" &&
+        activeProject &&
+        name.trim() &&
+        toSlug(name)
+      ) {
         setProjects((prev) =>
           prev.map((p) =>
             p.id === activeProject.id
@@ -57,10 +67,17 @@ export function useProjectDialogs() {
       } else if (dialogType === "delete" && activeProject) {
         setProjects((prev) => prev.filter((p) => p.id !== activeProject.id))
       }
+      timeoutRef.current = null
       setIsLoading(false)
       close()
     }, 300)
   }, [dialogType, name, activeProject, close])
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current !== null) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   return {
     projects,

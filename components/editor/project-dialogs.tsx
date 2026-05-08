@@ -33,9 +33,11 @@ export function CreateProjectDialog({
   onClose,
 }: CreateProjectDialogProps) {
   const slug = toSlug(name)
+  const hasName = name.trim().length > 0
+  const slugInvalid = hasName && !slug
 
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+    <Dialog open={open} onOpenChange={(v) => !v && !isLoading && onClose()}>
       <DialogContent className="bg-bg-elevated border-border-default rounded-3xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-text-primary">New Project</DialogTitle>
@@ -51,20 +53,28 @@ export function CreateProjectDialog({
             onChange={(e) => onNameChange(e.target.value)}
             placeholder="My Project"
             autoFocus
+            disabled={isLoading}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && name.trim()) onSubmit()
+              if (e.key === "Enter" && !slugInvalid && hasName && !isLoading)
+                onSubmit()
             }}
             className="bg-bg-surface border-border-default text-text-primary placeholder:text-text-faint"
           />
-          <p className="text-xs text-text-muted font-mono min-h-[1rem]">
-            {name.trim() ? slug || "—" : ""}
+          <p className="text-xs font-mono min-h-[1rem]">
+            {slugInvalid ? (
+              <span className="text-state-error">
+                Name must contain at least one letter or number.
+              </span>
+            ) : (
+              <span className="text-text-muted">{hasName ? slug : ""}</span>
+            )}
           </p>
         </div>
 
         <DialogFooter>
           <Button
             onClick={onSubmit}
-            disabled={!name.trim() || isLoading}
+            disabled={!hasName || slugInvalid || isLoading}
             className="bg-accent-primary text-bg-base hover:bg-accent-primary/90"
           >
             {isLoading ? "Creating…" : "Create Project"}
@@ -105,7 +115,7 @@ export function RenameProjectDialog({
   onClose,
 }: RenameProjectDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+    <Dialog open={open} onOpenChange={(v) => !v && !isLoading && onClose()}>
       <DialogContent className="bg-bg-elevated border-border-default rounded-3xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-text-primary">
@@ -118,16 +128,24 @@ export function RenameProjectDialog({
           )}
         </DialogHeader>
 
-        <div className="py-2">
+        <div className="space-y-3 py-1">
           <Input
             value={name}
             onChange={(e) => onNameChange(e.target.value)}
             autoFocus
+            disabled={isLoading}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && name.trim()) onSubmit()
+              const slug = toSlug(name)
+              if (e.key === "Enter" && name.trim() && slug && !isLoading)
+                onSubmit()
             }}
             className="bg-bg-surface border-border-default text-text-primary placeholder:text-text-faint"
           />
+          {name.trim() && !toSlug(name) && (
+            <p className="text-xs text-state-error font-mono">
+              Name must contain at least one letter or number.
+            </p>
+          )}
         </div>
 
         <DialogFooter>
@@ -141,7 +159,7 @@ export function RenameProjectDialog({
           </Button>
           <Button
             onClick={onSubmit}
-            disabled={!name.trim() || isLoading}
+            disabled={!name.trim() || !toSlug(name) || isLoading}
             className="bg-accent-primary text-bg-base hover:bg-accent-primary/90"
           >
             {isLoading ? "Saving…" : "Save"}
@@ -170,7 +188,7 @@ export function DeleteProjectDialog({
   onClose,
 }: DeleteProjectDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+    <Dialog open={open} onOpenChange={(v) => !v && !isLoading && onClose()}>
       <DialogContent className="bg-bg-elevated border-border-default rounded-3xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-text-primary">
