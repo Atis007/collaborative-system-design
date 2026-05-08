@@ -60,7 +60,7 @@ export function CreateProjectDialog({
             }}
             className="bg-bg-surface border-border-default text-text-primary placeholder:text-text-faint"
           />
-          <p className="text-xs font-mono min-h-[1rem]">
+          <p className="text-xs font-mono min-h-4">
             {slugInvalid ? (
               <span className="text-state-error">
                 Name must contain at least one letter or number.

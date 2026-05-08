@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { toSlug } from "@/lib/utils"
 
 interface RouteContext {
   params: Promise<{ projectId: string }>
@@ -32,6 +33,14 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   const name = body.name?.trim()
   if (!name) {
     return NextResponse.json({ error: "name is required" }, { status: 400 })
+  }
+
+  const slug = toSlug(name)
+  if (!slug) {
+    return NextResponse.json(
+      { error: "Name must contain at least one letter or number" },
+      { status: 400 },
+    )
   }
 
   const updated = await prisma.project.update({

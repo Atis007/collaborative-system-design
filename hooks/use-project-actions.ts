@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import type { Project } from "@/lib/projects"
 import { toSlug } from "@/lib/utils"
@@ -13,6 +13,8 @@ export function useProjectActions(
 ) {
   const router = useRouter()
   const pathname = usePathname()
+
+  const isSubmittingRef = useRef(false)
 
   const [dialogType, setDialogType] = useState<DialogType>(null)
   const [activeProject, setActiveProject] = useState<Project | null>(null)
@@ -46,6 +48,8 @@ export function useProjectActions(
   }, [])
 
   const handleSubmit = useCallback(async () => {
+    if (isSubmittingRef.current) return
+    isSubmittingRef.current = true
     setIsLoading(true)
     try {
       if (dialogType === "create" && name.trim()) {
@@ -87,6 +91,7 @@ export function useProjectActions(
     } catch {
       // errors are silent; toast system can be added when error UI is defined
     } finally {
+      isSubmittingRef.current = false
       setIsLoading(false)
     }
   }, [dialogType, name, activeProject, close, pathname, router])

@@ -22,20 +22,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  let body: { name?: string; description?: string; roomId?: string } = {}
+  let body: Record<string, unknown> = {}
   try {
     body = await request.json()
   } catch {
     // empty body is fine
   }
 
-  const roomId = body.roomId?.trim()
+  const roomId = typeof body.roomId === "string" ? body.roomId.trim() : undefined
+  const name = typeof body.name === "string" ? body.name.trim() : ""
+  const description =
+    typeof body.description === "string" ? body.description.trim() : null
+
   const project = await prisma.project.create({
     data: {
       ...(roomId ? { id: roomId } : {}),
       ownerId: userId,
-      name: body.name?.trim() || "Untitled Project",
-      description: body.description?.trim() ?? null,
+      name: name || "Untitled Project",
+      description: description || null,
     },
   })
 
