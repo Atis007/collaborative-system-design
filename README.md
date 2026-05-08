@@ -1,4 +1,8 @@
+This project is about **me** learning how to plan **before a single line of code is written**, and how to architect **LLM systems** to build the best possible version of a project.
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+ 
 
 ## Getting Started
 
