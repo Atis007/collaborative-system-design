@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Phase 4: Project Dialogs
+- Phase 5: Prisma Schema And Data Layer
 
 ## Current Goal
 
-- Editor home screen, project dialogs (create/rename/delete), sidebar actions wired to mock data.
+- Completed.
 
 ## Completed
 
@@ -16,6 +16,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - 02-editor: EditorNavbar and ProjectSidebar shell components created; EditorShell client wrapper and app/editor layout added; dialog pattern ready via existing shadcn Dialog.
 - 03-auth: ClerkProvider with dark theme and CSS variable overrides, proxy.ts middleware with public route protection, sign-in/sign-up two-panel pages, / redirect logic, UserButton in editor navbar.
 - 04-project-dialogs: Editor home screen with heading/description/New Project button; useProjectDialogs hook (dialog, form, loading state); CreateProjectDialog with live slug preview; RenameProjectDialog (prefilled, autoFocus, Enter submits); DeleteProjectDialog (destructive); EditorActionsContext threading state to sidebar and editor home; sidebar project items with hover rename/delete actions (owned only); mobile backdrop scrim.
+- 05-prisma: Project and ProjectCollaborator models in prisma/models/project.prisma; PrismaClient singleton in lib/prisma.ts branching on prisma+postgres:// (accelerateUrl) vs direct (PrismaPg adapter); migration 20260508155628_init applied; client generated to app/generated/prisma.
 
 ## In Progress
 
