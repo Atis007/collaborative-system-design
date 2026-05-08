@@ -4,7 +4,7 @@ import { Pencil, Plus, Trash2, X } from "lucide-react"
 import { useEditorActions } from "@/components/editor/editor-actions-context"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import type { MockProject } from "@/lib/mock-projects"
+import type { Project } from "@/lib/projects"
 import { cn } from "@/lib/utils"
 
 interface ProjectSidebarProps {
@@ -17,7 +17,7 @@ function ProjectItem({
   onRename,
   onDelete,
 }: {
-  project: MockProject
+  project: Project
   onRename?: () => void
   onDelete?: () => void
 }) {
@@ -76,7 +76,7 @@ export function ProjectSidebar({ isOpen, onClose }: ProjectSidebarProps) {
 
       <aside
         aria-hidden={!isOpen}
-        inert={!isOpen ? true : undefined}
+        inert={!isOpen}
         className={cn(
           "fixed top-12 left-0 z-40 h-[calc(100vh-3rem)] w-72",
           "flex flex-col",

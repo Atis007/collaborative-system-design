@@ -1,13 +1,13 @@
 "use client"
 
 import { createContext, useContext } from "react"
-import type { MockProject } from "@/lib/mock-projects"
+import type { Project } from "@/lib/projects"
 
 interface EditorActionsContextValue {
-  projects: MockProject[]
+  projects: Project[]
   openCreate: () => void
-  openRename: (project: MockProject) => void
-  openDelete: (project: MockProject) => void
+  openRename: (project: Project) => void
+  openDelete: (project: Project) => void
 }
 
 export const EditorActionsContext =

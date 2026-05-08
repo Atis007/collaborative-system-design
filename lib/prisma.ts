@@ -12,7 +12,8 @@ function createClient(): PrismaClient {
     return new PrismaClient({ accelerateUrl: url })
   }
 
-  const adapter = new PrismaPg(url)
+  const safeUrl = url.replace("sslmode=require", "sslmode=verify-full")
+  const adapter = new PrismaPg(safeUrl)
   return new PrismaClient({ adapter })
 }
 

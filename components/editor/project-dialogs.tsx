@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import type { MockProject } from "@/lib/mock-projects"
+import type { Project } from "@/lib/projects"
 import { toSlug } from "@/lib/utils"
 
 // ---- Create Project ----
@@ -97,7 +97,7 @@ export function CreateProjectDialog({
 
 interface RenameProjectDialogProps {
   open: boolean
-  project: MockProject | null
+  project: Project | null
   name: string
   isLoading: boolean
   onNameChange: (value: string) => void
@@ -174,7 +174,7 @@ export function RenameProjectDialog({
 
 interface DeleteProjectDialogProps {
   open: boolean
-  project: MockProject | null
+  project: Project | null
   isLoading: boolean
   onConfirm: () => void
   onClose: () => void

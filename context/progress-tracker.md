@@ -4,7 +4,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Phase 5: Prisma Schema And Data Layer
+- Phase 6: Project APIs
 
 ## Current Goal
 
@@ -17,6 +17,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - 03-auth: ClerkProvider with dark theme and CSS variable overrides, proxy.ts middleware with public route protection, sign-in/sign-up two-panel pages, / redirect logic, UserButton in editor navbar.
 - 04-project-dialogs: Editor home screen with heading/description/New Project button; useProjectDialogs hook (dialog, form, loading state); CreateProjectDialog with live slug preview; RenameProjectDialog (prefilled, autoFocus, Enter submits); DeleteProjectDialog (destructive); EditorActionsContext threading state to sidebar and editor home; sidebar project items with hover rename/delete actions (owned only); mobile backdrop scrim.
 - 05-prisma: Project and ProjectCollaborator models in prisma/models/project.prisma; PrismaClient singleton in lib/prisma.ts branching on prisma+postgres:// (accelerateUrl) vs direct (PrismaPg adapter); migration 20260508155628_init applied; client generated to app/generated/prisma.
+- 06-project-apis: REST endpoints for projects — GET /api/projects (list by owner), POST /api/projects (create, defaults name to "Untitled Project"), PATCH /api/projects/[projectId] (rename, owner-only), DELETE /api/projects/[projectId] (delete, owner-only); 401 for unauthenticated, 403 for non-owner mutations.
+- 07-wire-editor-home: lib/projects.ts (Project type + getProjectsForUser helper); hooks/use-project-actions.ts (create/rename/delete against real API, router.push/refresh); editor layout fetches owned+shared server-side and passes to EditorShell; EditorShell/context/sidebar/dialogs ported from MockProject to Project; POST /api/projects accepts optional roomId to align project ID with Liveblocks room ID.
 
 ## In Progress
 
